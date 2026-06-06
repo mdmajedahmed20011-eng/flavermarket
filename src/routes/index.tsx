@@ -429,10 +429,19 @@ function Index() {
                   const isSelected = selected.id === p.id;
                   const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
                   return (
-                    <button
+                    <div
                       key={p.id}
                       onClick={() => { setSelected(p); setQty(1); }}
-                      className={`relative flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition ${
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelected(p);
+                          setQty(1);
+                        }
+                      }}
+                      className={`relative flex w-full cursor-pointer items-center gap-4 rounded-2xl border-2 p-4 text-left transition ${
                         isSelected ? "border-primary bg-accent/40 shadow-md" : "border-border bg-card hover:border-primary/40"
                       } ${p.best ? "ring-2 ring-cta/40" : ""}`}
                     >
@@ -449,16 +458,16 @@ function Index() {
                         <p className="mt-0.5 text-xs text-[oklch(0.5_0.15_150)]">✓ ফ্রি ডেলিভারি</p>
                       </div>
                       {isSelected && (
-                        <div className="flex items-center gap-2 rounded-full border border-border bg-background px-2 py-1">
-                          <button onClick={(e) => { e.stopPropagation(); setQty(Math.max(1, qty - 1)); }} className="rounded-full p-1 hover:bg-muted"><Minus className="h-3 w-3" /></button>
+                        <div className="flex items-center gap-2 rounded-full border border-border bg-background px-2 py-1" onClick={(e) => e.stopPropagation()}>
+                          <button type="button" onClick={(e) => { e.stopPropagation(); setQty(Math.max(1, qty - 1)); }} className="rounded-full p-1 hover:bg-muted"><Minus className="h-3 w-3" /></button>
                           <span className="min-w-[20px] text-center text-sm font-bold">{qty}</span>
-                          <button onClick={(e) => { e.stopPropagation(); setQty(qty + 1); }} className="rounded-full p-1 hover:bg-muted"><Plus className="h-3 w-3" /></button>
+                          <button type="button" onClick={(e) => { e.stopPropagation(); setQty(qty + 1); }} className="rounded-full p-1 hover:bg-muted"><Plus className="h-3 w-3" /></button>
                         </div>
                       )}
                       <span className="absolute -top-2.5 right-3 rounded-full bg-cta px-2.5 py-0.5 text-[10px] font-bold text-cta-foreground shadow">
                         {p.badge}
                       </span>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
